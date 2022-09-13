@@ -1,0 +1,112 @@
+openapi: 3.0.0
+info:
+  title: VendorSearch service
+  version: 1.0.0
+
+paths:
+  /api/v2/filters:
+    summary: Operations on vendors filters.
+    get:
+      summary: Returns vendors filters for given location.
+      description: >-
+        How does that endpoint work and some useful notes worthly to share.
+      parameters:
+      - $ref: ../definitions.yaml#/components/parameters/UserAgent
+      - $ref: ../definitions.yaml#/components/parameters/AcceptLanguage
+      - $ref: ../definitions.yaml#/components/parameters/DeviceUID
+      - $ref: ../definitions.yaml#/components/parameters/HSUserID
+      - $ref: ../definitions.yaml#/components/parameters/HSEmail
+      - $ref: ../definitions.yaml#/components/parameters/HSIsNewCustomer
+      - $ref: ../definitions.yaml#/components/parameters/HSEmailIsVerified
+      - $ref: '#/components/parameters/PerseusClientID'
+      - in: query
+        name: latitude
+        required: true
+        schema:
+          type: number
+          format: double
+          minimum: -180
+          maximum: 180
+      - in: query
+        name: longitude
+        required: true
+        schema:
+          type: number
+          format: double
+          minimum: -90
+          maximum: 90
+      - in: query
+        name: home_module_id
+        required: false
+        x-hs-go-valueless-on-nil: false   # use *int with nil instead of int with 0
+                                          # when no `home_module_id` in query
+        schema:
+          type: integer
+          format: int32
+          minimun: 0
+          x-hs-go-type: uint32   # to specify go type
+    responses:
+      200:
+        description: OK
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FiltersResponse'
+components:
+  parameters:
+    PerseusClientID:
+      in: header
+      name: perseus-client-id
+      required: false
+      x-hs-go-valueless-on-nil: true # use empty string vs *string with nil
+      schema:
+        type: string
+
+    PerseusSessionID:
+      in: header
+      name: perseus-session-id
+      required: false
+      schema:
+        type: string
+
+  schemas:
+    FiltersResponse:
+      type: array
+      items:
+        $ref: '#/components/schemas/FilterCategory'
+    FilterCategory:
+      type: object
+      required:
+      - title
+      - type
+      - multi_selection
+      - filters
+      properties:
+        title:
+          type: string
+        type:
+          type: string
+        multi_selection:
+          type: boolean
+        filters:
+          type: array
+          items:
+            $ref: '#/components/schemas/Filter'
+      additionalProperties: false
+
+    Filter:
+      type: object
+      required:
+      - id
+      - value
+      - icon_url
+      properties:
+        id:
+          type: integer
+          format: int
+          x-hs-go-type: uint
+        value:
+          type: string
+        icon_url:
+          type: string
+      additionalProperties: false

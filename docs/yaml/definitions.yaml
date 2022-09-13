@@ -1,0 +1,60 @@
+components:
+  parameters:
+    UserAgent:
+      in: header
+      name: User-Agent
+      description: User-Agent header.
+      required: true
+      schema:
+        type: string
+
+    AcceptLanguage:
+      in: header
+      name: Accept-Language
+      required: false
+      default: en-US
+      schema:
+        type: string
+
+    DeviceUID:
+      in: header
+      name: Device-UID
+      required: true
+      schema:
+        type: string
+
+    HSUserID:
+      in: header
+      name: HS-User-ID
+      required: true
+      schema:
+        type: string
+
+    HSEmail:
+      in: header
+      name: HS-Email
+      required: true
+      schema:
+        type: string
+
+    HSIsNewCustomer:
+      in: header
+      name: HS-Is-New-Customer
+      required: false
+      default: 'false'
+      schema:
+        type: string
+        enum:
+        - true
+        - false
+
+    HSEmailIsVerified:
+      in: header
+      name: HS-Email-Is-Verified
+      required: false
+      default: 'false'
+      schema:
+        type: string
+        enum:
+        - true
+        - false
